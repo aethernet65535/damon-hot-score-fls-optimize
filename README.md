@@ -47,4 +47,15 @@ The detailed results are here [1]; I will include a portion of them here.
 [1] https://github.com/aethernet65535/damon-hot-score-fls-optimize/tree/master/result-raw
 
 # Usage
-Copy the command here https://github.com/aethernet65535/damon-hot-score-fls-optimize/blob/master/reproduction.txt
+Copy the command here:
+```sh
+# host machine
+sudo cpupower frequency-set -g performance
+sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
+vng --cpu 1 --memory 2G --verbose
+
+# vitrual machine
+cdwork
+cd lab/damon
+sudo insmod test-kernel-module/fls.ko
+```
