@@ -13,7 +13,8 @@ GCC: gcc (GCC) 15.2.1 20260209
 CLANG: clang version 22.1.1 
 
 ## The result on my machine
-The detailed results are here [1]; I will include a portion of them here.
+The detailed results are here [1]; I will include a portion of them
+here.
 ```
 # fls-result.txt
 
@@ -65,3 +66,11 @@ git clone https://github.com/aethernet65535/damon-hot-score-fls-optimize.git
 cd damon-hot-score-fls-optimize
 sudo insmod test-kernel-module/fls.ko
 ```
+
+### Export Symbol
+Due to this test kernel module uses some functions that are not exported
+by default in the kernel, you must ensure that 'damon_new_ctx' and
+'damon_destroy_ctx' have been exported in your kernel, or you can try
+using this patch. [1]
+
+[1] https://github.com/aethernet65535/damon-hot-score-fls-optimize/blob/master/test-kernel-module/0001-damon-hot-score-fls-optimize.patch
