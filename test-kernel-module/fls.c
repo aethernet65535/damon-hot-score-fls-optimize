@@ -36,13 +36,26 @@ static int my_damon_hot_score(struct damon_ctx *c, struct damon_region *r,
 	d_age_in_sec = age_in_sec = (unsigned long)r->age * c->attrs.aggr_interval / 1000000;
 
 	/* ------------------------------------------------------------------------- */
-	/* Algorithm A: Original For Loop */
+	/* Algorithm A: Original For-Loop */
 	// for (age_in_log = 0; age_in_log < MY_DAMON_MAX_AGE_IN_LOG && age_in_sec;
 	//      age_in_log++, age_in_sec >>= 1)
 	// 	;
 
 	/* Algorithm B: fls */
-	age_in_log = min_t(int, fls(age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
+	// age_in_log = min_t(int, fls(d_age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
+
+	/* Algorithm C: ilog2 (recommend by SeongJae) */
+	age_in_log = min_t(int, ilog2(d_age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
+	if (age_in_log)
+		age_in_log++;
+	
+	/* Compare: A:B */
+	// if (age_in_log != min_t(int, fls(d_age_in_sec), MY_DAMON_MAX_AGE_IN_LOG))
+	// 	pr_info("AB: FALSE!\n");
+
+	/* Compare: A:C (DC?) */
+	// if (age_in_log != min_t(int, ilog2(d_age_in_sec), MY_DAMON_MAX_AGE_IN_LOG))
+	// 	pr_info("ACDC: FALSE!\n");
 	/* ------------------------------------------------------------------------- */
 
 	if (freq_subscore == 0)
