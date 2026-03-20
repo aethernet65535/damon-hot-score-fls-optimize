@@ -5,8 +5,5 @@ vng --cpu 1 --memory 2G
 
 cdwork
 cd lab/damon
-sudo ./lru_sort.sh
-sudo perf probe --add damon_hot_score
-stress-ng --vm 4 --vm-bytes 70% --vm-hang 20 --timeout 10m &
-sudo perf stat -e "probe:damon_hot_score" -a -I 1000
-exit
+sudo ./script/lru_sort.sh
+sudo insmod test-kernel-module/fls.ko

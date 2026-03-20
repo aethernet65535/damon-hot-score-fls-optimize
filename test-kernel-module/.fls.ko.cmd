@@ -1,0 +1,1 @@
+savedcmd_fls.ko := ld -r -m elf_x86_64 --fatal-warnings -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T /home/user/65535/workspace/oss/linux/kernel/linux_mainline/build/vng/x86_64/scripts/module.lds -o fls.ko fls.o fls.mod.o .module-common.o
