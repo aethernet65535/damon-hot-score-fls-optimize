@@ -1,61 +1,50 @@
 # Result and Environment
 ## My Environment
 CPU: AMD Ryzen 5 5600H
+CPUs: 12
+VM-CPUs: 1
+
 RAM: 16GB DDR4
+VM-RAM: 1GB
 
 ## The result on my machine
+The detailed results are here [1]; I will include a portion of them here.
 ```
-=============================================
- FILE: result-raw/fls/combined_file.txt
-=============================================
- Total Samples : 1072
- Average       : 43.19 ns
- P95 Latency   : 60 ns
- P99 Latency   : 69 ns
----------------------------------------------
- Range (ns)      | Count    | Percent   
----------------------------------------------
- 20-39           | 12       |   1.12%
- 40-59           | 978      |  91.23%
- 60-79           | 82       |   7.65%
-=============================================
+# fls-result.txt
 
-=============================================
- FILE: result-raw/loop/combined_file.txt
-=============================================
- Total Samples : 674
- Average       : 39.99 ns
- P95 Latency   : 50 ns
- P99 Latency   : 70 ns
----------------------------------------------
- Range (ns)      | Count    | Percent   
----------------------------------------------
- 20-39           | 124      |  18.40%
- 40-59           | 526      |  78.04%
- 60-79           | 19       |   2.82%
- 80-99           | 3        |   0.45%
- 100-119         | 1        |   0.15%
- 200-219         | 1        |   0.15%
-=============================================
+[    4.751571] DAMON Perf Test: Starting 10000000 iterations...
+[    4.770561] =============================================
+[    4.770669]  Total Iterations : 10000000
+[    4.770754]  Average Latency  : 1 ns
+[    4.770818]  P95 Latency      : 40 ns
+[    4.770875]  P99 Latency      : 41 ns
+[    4.770994] ---------------------------------------------
+[    4.771081]  Range (ns)      | Count    | Percent   
+[    4.771153] ---------------------------------------------
+[    4.771236]  20-39           | 3522000  |   35%
+[    4.771307]  40-59           | 6478000  |   64%
+[    4.771377]  60-79           | 0        |    0%
+[    4.771446] =============================================
 ```
+```
+# loop-result.txt
+
+[   11.495899] DAMON Perf Test: Starting 10000000 iterations...
+[   11.596104] =============================================
+[   11.596217]  Total Iterations : 10000000
+[   11.596571]  Average Latency  : 9 ns
+[   11.596680]  P95 Latency      : 51 ns
+[   11.596766]  P99 Latency      : 60 ns
+[   11.596835] ---------------------------------------------
+[   11.596910]  Range (ns)      | Count    | Percent   
+[   11.597009] ---------------------------------------------
+[   11.597084]  20-39           | 0        |    0%
+[   11.597157]  40-59           | 9894000  |   98%
+[   11.597228]  60-79           | 98000    |    0%
+[   11.597297] =============================================
+```
+
+[1] https://github.com/aethernet65535/damon-hot-score-fls-optimize/tree/master/result-raw
 
 # Usage
-## How I test?
-```sh
-# on host machine
-sudo cpupower frequency-set -g performance
-sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
-vng --cpu 1 --memory 2G --verbose
-
-# on VM (virtme-ng)
-cdwork
-cd tmp/damon
-sudo ./lru_sort.sh
-stress-ng --vm 4 --vm-bytes 70% --vm-hang 20 --timeout 10m
-sudo cat /sys/kernel/tracing/trace | grep DAMON_BENCH
-```
-
-## How to get the result?
-```sh
-python analyze.py <file1> [file-2]
-```
+Copy the command here https://github.com/aethernet65535/damon-hot-score-fls-optimize/blob/master/reproduction.txt
