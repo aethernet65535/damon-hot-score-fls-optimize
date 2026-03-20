@@ -1,1 +1,0 @@
-savedcmd_Module.symvers :=  /home/user/65535/workspace/oss/linux/kernel/linux_mainline/build/vng/x86_64/scripts/mod/modpost -M          -o Module.symvers -T modules.order -i /home/user/65535/workspace/oss/linux/kernel/linux_mainline/build/vng/x86_64/Module.symvers -e 

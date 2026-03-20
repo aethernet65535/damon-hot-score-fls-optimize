@@ -1,0 +1,33 @@
+From 5dd563fec39bdd39c86275802bf8a943ebf1740d Mon Sep 17 00:00:00 2001
+From: Liew Rui Yan <aethernet65535@gmail.com>
+Date: Fri, 20 Mar 2026 12:27:06 +0800
+Subject: [PATCH] damon-hot-score-fls-optimize
+
+Signed-off-by: Liew Rui Yan <aethernet65535@gmail.com>
+---
+ mm/damon/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index c1d1091d307e..92dce917e14f 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -560,6 +560,7 @@ struct damon_ctx *damon_new_ctx(void)
+ 
+ 	return ctx;
+ }
++EXPORT_SYMBOL(damon_new_ctx);
+ 
+ static void damon_destroy_targets(struct damon_ctx *ctx)
+ {
+@@ -580,6 +581,7 @@ void damon_destroy_ctx(struct damon_ctx *ctx)
+ 
+ 	kfree(ctx);
+ }
++EXPORT_SYMBOL(damon_destroy_ctx);
+ 
+ static bool damon_attrs_equals(const struct damon_attrs *attrs1,
+ 		const struct damon_attrs *attrs2)
+-- 
+2.53.0
+
