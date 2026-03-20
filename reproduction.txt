@@ -1,9 +1,10 @@
 Copy It:
-sudo cpupower frequency-set -g performance
-sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
-vng --cpu 1 --memory 2G
+    # host machine
+    sudo cpupower frequency-set -g performance
+    sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
+    vng --cpu 1 --memory 2G --verbose
 
-cdwork
-cd lab/damon
-sudo ./script/lru_sort.sh
-sudo insmod test-kernel-module/fls.ko
+    # vitrual machine
+    cdwork
+    cd lab/damon
+    sudo insmod test-kernel-module/fls.ko

@@ -1313,6 +1313,7 @@ deps_fls.o := \
   /home/user/65535/workspace/oss/linux/kernel/linux_mainline/arch/x86/include/asm/device.h \
   /home/user/65535/workspace/oss/linux/kernel/linux_mainline/include/linux/pm_wakeup.h \
   /home/user/65535/workspace/oss/linux/kernel/linux_mainline/include/linux/pagevec.h \
+  /home/user/65535/workspace/oss/linux/kernel/linux_mainline/include/linux/sort.h \
 
 fls.o: $(deps_fls.o)
 
