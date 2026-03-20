@@ -1,16 +1,16 @@
 # Result and Environment
 ## My Environment
 ### Hardware
-CPU: AMD Ryzen 5 5600H
-CPUs: 12
-RAM: 16GB DDR4
+CPU: AMD Ryzen 5 5600H  
+CPUs: 12    
+RAM: 16GB DDR4  
 
 ### Software
-VM-CPUs: 1
-VM-RAM: 1GB
-KERNEL: v7.0.0-rc4 x86-64
-GCC: gcc (GCC) 15.2.1 20260209
-CLANG: clang version 22.1.1
+VM-CPUs: 1  
+VM-RAM: 1GB 
+KERNEL: v7.0.0-rc4 x86-64   
+GCC: gcc (GCC) 15.2.1 20260209  
+CLANG: clang version 22.1.1 
 
 ## The result on my machine
 The detailed results are here [1]; I will include a portion of them here.
