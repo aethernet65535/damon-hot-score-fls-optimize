@@ -74,3 +74,17 @@ by default in the kernel, you must ensure that 'damon_new_ctx' and
 using this patch. [1]
 
 [1] https://github.com/aethernet65535/damon-hot-score-fls-optimize/blob/master/test-kernel-module/0001-damon-hot-score-fls-optimize.patch
+
+### How to change the algorithm?
+Simply come here, uncomment the algorithms you want, and comment out the ones you don't.
+```c
+/* ------------------------------------------------------------------------- */
+/* Algorithm A: Original For Loop */
+// for (age_in_log = 0; age_in_log < MY_DAMON_MAX_AGE_IN_LOG && age_in_sec;
+//      age_in_log++, age_in_sec >>= 1)
+// 	;
+
+/* Algorithm B: fls */
+// age_in_log = min_t(int, fls(age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
+/* ------------------------------------------------------------------------- */
+```
