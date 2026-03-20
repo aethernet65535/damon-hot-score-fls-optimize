@@ -1,0 +1,12 @@
+fentry:damon_hot_score {
+    @start[tid] = nsecs;
+}
+fexit:damon_hot_score {
+    if (@start[tid]) {
+        @latency = lhist(nsecs - @start[tid], 0, 300, 10);
+        delete(@start[tid]);
+    }
+}
+interval:s:600 {
+    exit();
+}

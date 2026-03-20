@@ -1,11 +1,12 @@
 Copy It:
 sudo cpupower frequency-set -g performance
 sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
-vng --cpu 1 --memory 2G --verbose
+vng --cpu 1 --memory 2G
 
 cdwork
-cd tmp/damon
+cd lab/damon
 sudo ./lru_sort.sh
-stress-ng --vm 4 --vm-bytes 70% --vm-hang 20 --timeout 10m
-sudo cat /sys/kernel/tracing/trace | grep DAMON_BENCH
+sudo perf probe --add damon_hot_score
+stress-ng --vm 4 --vm-bytes 70% --vm-hang 20 --timeout 10m &
+sudo perf stat -e "probe:damon_hot_score" -a -I 1000
 exit
