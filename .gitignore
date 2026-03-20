@@ -6,4 +6,4 @@ reproduction.txt
 *.symvers
 *.order
 .*.o
-*.mod.*
+*.mod.c
