@@ -37,12 +37,12 @@ static int my_damon_hot_score(struct damon_ctx *c, struct damon_region *r,
 
 	/* ------------------------------------------------------------------------- */
 	/* Algorithm A: Original For Loop */
-	for (age_in_log = 0; age_in_log < MY_DAMON_MAX_AGE_IN_LOG && age_in_sec;
-	     age_in_log++, age_in_sec >>= 1)
-		;
+	// for (age_in_log = 0; age_in_log < MY_DAMON_MAX_AGE_IN_LOG && age_in_sec;
+	//      age_in_log++, age_in_sec >>= 1)
+	// 	;
 
 	/* Algorithm B: fls */
-	// age_in_log = min_t(int, fls(age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
+	age_in_log = min_t(int, fls(age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
 	/* ------------------------------------------------------------------------- */
 
 	if (freq_subscore == 0)
