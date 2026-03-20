@@ -27,13 +27,13 @@ static int my_damon_hot_score(struct damon_ctx *c, struct damon_region *r,
 			      struct damos *s)
 {
 	int freq_subscore, age_in_log, age_subscore, hotness;
-	unsigned int age_in_sec;
+	unsigned int age_in_sec, d_age_in_sec;
 	unsigned int freq_weight = s->quota.weight_nr_accesses;
 	unsigned int age_weight = s->quota.weight_age;
 
 	freq_subscore = r->nr_accesses * MY_DAMON_MAX_SUBSCORE /
 			my_max_nr_accesses(&c->attrs);
-	age_in_sec = (unsigned long)r->age * c->attrs.aggr_interval / 1000000;
+	d_age_in_sec = age_in_sec = (unsigned long)r->age * c->attrs.aggr_interval / 1000000;
 
 	/* ------------------------------------------------------------------------- */
 	/* Algorithm A: Original For Loop */
@@ -42,7 +42,7 @@ static int my_damon_hot_score(struct damon_ctx *c, struct damon_region *r,
 	// 	;
 
 	/* Algorithm B: fls */
-	// age_in_log = min_t(int, fls(age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
+	age_in_log = min_t(int, fls(age_in_sec), MY_DAMON_MAX_AGE_IN_LOG);
 	/* ------------------------------------------------------------------------- */
 
 	if (freq_subscore == 0)
@@ -74,7 +74,9 @@ static int damon_perf_test(void)
 	ktime_t start, end, t1, t2;
 	u64 total_ns = 0, diff;
 	int i, sample_idx = 0;
-	int cnt_20_39 = 0, cnt_40_59 = 0, cnt_60_79 = 0;
+	int cnt_0_19 = 0, cnt_20_39 = 0;
+	int cnt_40_59 = 0, cnt_60_79 = 0;
+	int cnt_80_99 = 0, cnt_100 = 0;
 
 	samples = kmalloc_array(SAMPLE_COUNT, sizeof(u64), GFP_KERNEL);
 	if (!samples)
@@ -92,12 +94,11 @@ static int damon_perf_test(void)
 	s.quota.weight_age = 50;
 	r.nr_accesses = 15;
 
-	pr_info("DAMON Perf Test: Starting %d iterations...\n", TEST_LOOPS);
+	pr_info("DAMON Perf Test: Starting %d iterations\n", TEST_LOOPS);
 
 	start = ktime_get();
 	for (i = 0; i < TEST_LOOPS; i++) {
-		r.age = (i % 1000) *
-			10; /* Use a fixed age sequence for consistency */
+		r.age = i;
 
 		if (unlikely(i % SAMPLE_STRIDE == 0 &&
 			     sample_idx < SAMPLE_COUNT)) {
@@ -107,12 +108,18 @@ static int damon_perf_test(void)
 			diff = ktime_to_ns(ktime_sub(t2, t1));
 
 			samples[sample_idx++] = diff;
-			if (diff >= 20 && diff <= 39)
+			if (diff >= 0 && diff <= 19)
+				cnt_0_19++;
+			else if (diff >= 20 && diff <= 39)
 				cnt_20_39++;
 			else if (diff >= 40 && diff <= 59)
 				cnt_40_59++;
 			else if (diff >= 60 && diff <= 79)
 				cnt_60_79++;
+			else if (diff >= 80 && diff <= 99)
+				cnt_80_99++;
+			else
+				cnt_100++;
 		} else {
 			my_damon_hot_score(c, &r, &s);
 		}
@@ -130,15 +137,22 @@ static int damon_perf_test(void)
 	pr_info(" P99 Latency      : %llu ns\n",
 		samples[(SAMPLE_COUNT * 99) / 100]);
 	pr_info("---------------------------------------------\n");
-	pr_info(" Range (ns)      | Count    | Percent   \n");
+	pr_info(" Range (ns)      | Count        | Percent\n");
 	pr_info("---------------------------------------------\n");
-	pr_info(" 20-39           | %-8d |  %3d%%\n", cnt_20_39 * SAMPLE_STRIDE,
+	pr_info(" 0-19            | %-8d     |  %5d%%\n", cnt_0_19 * SAMPLE_STRIDE,
+		(cnt_0_19 * 100) / SAMPLE_COUNT);
+	pr_info(" 20-39           | %-8d     |  %5d%%\n", cnt_20_39 * SAMPLE_STRIDE,
 		(cnt_20_39 * 100) / SAMPLE_COUNT);
-	pr_info(" 40-59           | %-8d |  %3d%%\n", cnt_40_59 * SAMPLE_STRIDE,
+	pr_info(" 40-59           | %-8d     |  %5d%%\n", cnt_40_59 * SAMPLE_STRIDE,
 		(cnt_40_59 * 100) / SAMPLE_COUNT);
-	pr_info(" 60-79           | %-8d |  %3d%%\n", cnt_60_79 * SAMPLE_STRIDE,
+	pr_info(" 60-79           | %-8d     |  %5d%%\n", cnt_60_79 * SAMPLE_STRIDE,
 		(cnt_60_79 * 100) / SAMPLE_COUNT);
+	pr_info(" 80-99           | %-8d     |  %5d%%\n", cnt_80_99 * SAMPLE_STRIDE,
+		(cnt_80_99 * 100) / SAMPLE_COUNT);
+	pr_info(" 100+            | %-8d     |  %5d%%\n", cnt_100 * SAMPLE_STRIDE,
+		(cnt_100 * 100) / SAMPLE_COUNT);
 	pr_info("=============================================\n");
+	pr_info("\n");
 
 	damon_destroy_ctx(c);
 	kfree(samples);
