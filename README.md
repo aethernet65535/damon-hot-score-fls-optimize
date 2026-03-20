@@ -1,11 +1,16 @@
 # Result and Environment
 ## My Environment
+### Hardware
 CPU: AMD Ryzen 5 5600H
 CPUs: 12
-VM-CPUs: 1
-
 RAM: 16GB DDR4
+
+### Software
+VM-CPUs: 1
 VM-RAM: 1GB
+KERNEL: v7.0.0-rc4 x86-64
+GCC: gcc (GCC) 15.2.1 20260209
+CLANG: clang version 22.1.1
 
 ## The result on my machine
 The detailed results are here [1]; I will include a portion of them here.
@@ -47,6 +52,7 @@ The detailed results are here [1]; I will include a portion of them here.
 [1] https://github.com/aethernet65535/damon-hot-score-fls-optimize/tree/master/result-raw
 
 # Usage
+## Quick Reproduction
 Copy the command here:
 ```sh
 # host machine
@@ -55,7 +61,7 @@ sync; echo 3 | sudo tee /proc/sys/vm/drop_caches
 vng --cpu 1 --memory 2G --verbose
 
 # vitrual machine
-cdwork
-cd lab/damon
+git clone https://github.com/aethernet65535/damon-hot-score-fls-optimize.git
+cd damon-hot-score-fls-optimize
 sudo insmod test-kernel-module/fls.ko
 ```
