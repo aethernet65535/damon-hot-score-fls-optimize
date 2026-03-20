@@ -1,0 +1,7 @@
+reproduction.txt
+.*.cmd
+*.o
+*.ko
+*.mod
+*.symvers
+*.order
